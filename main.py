@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 import logging
+from envparse import env
 
 logging.basicConfig()
 
@@ -8,10 +9,6 @@ logger.setLevel(logging.DEBUG)
 
 from imapclient import IMAPClient
 
-ssl = True
-
-from envparse import env
-
 
 
 env.read_envfile()
@@ -19,7 +16,7 @@ env.read_envfile()
 if __name__ == '__main__':
     logger.info('start IMAP')
 
-    server = IMAPClient(env('HOST'), use_uid=True, ssl=ssl)
+    server = IMAPClient(env('HOST'), port=env('PORT', default=None), use_uid=True, ssl=env.bool('SSL', default=True))
 
     logger.info(' [+] LOGIN')
     server.login(env('USERNAME'), env('PASSWORD'))
